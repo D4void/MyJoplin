@@ -1,0 +1,83 @@
+# Docker compose file to run Joplin Server along with a PostgreSQL server.
+#
+# Create .env file before starting. (check env.sample)
+# Traefik Label are used to reach the server from Internet through https. Refer to MyTraefik project.
+#
+# I run this with a global compose : MyDockerApps which include Traefik and this Joplin compose file.
+# d4void/joplin is the official image I build myself from the release : docker build -t d4void/joplin:3.0.15 -f Dockerfile.server .
+
+services:
+  joplin_db:
+    image: postgres:16.2-alpine3.19
+    container_name: "MyJoplinPostgres"
+    shm_size: 256M
+    volumes:
+      - joplin_db_data:/var/lib/postgresql/data
+      - joplin_db_backup:/backup
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}     
+    networks:
+      - joplinnet
+
+  joplin_app:
+    image: d4void/joplin:3.0.15
+    container_name: "MyJoplinApp"
+    depends_on:
+      - joplin_db
+      - traefik
+    restart: unless-stopped
+    environment:
+      - APP_PORT=${JOPLIN_PORT}
+      - APP_BASE_URL=${APP_BASE_URL}
+      - DB_CLIENT=pg
+      - POSTGRES_HOST=joplin_db
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - MAILER_ENABLED=${MAILER_ENABLED}
+      - MAILER_HOST=${MAILER_HOST}
+      - MAILER_PORT=${MAILER_PORT}
+      - MAILER_SECURITY=${MAILER_SECURITY}
+      - MAILER_AUTH_USER=${MAILER_AUTH_USER}
+      - MAILER_AUTH_PASSWORD=${MAILER_AUTH_PASSWORD}
+      - MAILER_NOREPLY_NAME=${MAILER_NOREPLY_NAME}
+      - MAILER_NOREPLY_EMAIL=${MAILER_NOREPLY_EMAIL}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=MyTraefikNet"
+      - "traefik.http.routers.joplincontainer.rule=Host(`${JOPLIN_FQDN}`)"
+      - "traefik.http.routers.joplincontainer.entrypoints=websecure"
+      - "traefik.http.routers.joplincontainer.tls=true"
+      - "traefik.http.routers.joplincontainer.tls.certresolver=mytlschallenge"
+      - "traefik.http.routers.joplincontainer.middlewares=security@file"
+      - "traefik.http.routers.joplincontainer.service=myjoplinservice"
+      - "traefik.http.services.myjoplinservice.loadbalancer.server.port=${JOPLIN_PORT}"
+      - "traefik.http.services.myjoplinservice.loadbalancer.server.scheme=http"
+    networks:
+      - default
+      - joplinnet
+
+
+volumes:
+  joplin_db_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${DB_VOL}
+      o: bind
+  joplin_db_backup:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${DB_BACKUP_VOL}
+      o: bind
+
+
+networks:
+  joplinnet:
+    internal: true
+    name: MyJoplinNet
