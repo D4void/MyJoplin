@@ -31,7 +31,7 @@ services:
       - POSTGRES_DB=${POSTGRES_DATABASE}
   
   app:
-    image: joplin/server:latest
+    image: joplin:2.14.20
     depends_on:
       - db
     ports:
