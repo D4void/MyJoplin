@@ -48,6 +48,7 @@ services:
       - POSTGRES_PORT=5432
       - POSTGRES_HOST=db
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.joplincontainer.rule=Host(`${JOPLIN_FQDN}`)"
       - "traefik.http.routers.joplincontainer.entrypoints=joplin"
     networks:
