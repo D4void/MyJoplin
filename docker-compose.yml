@@ -47,7 +47,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PORT=5432
       - POSTGRES_HOST=db
-    label:
+    labels:
       - "traefik.http.routers.joplincontainer.entrypoints=joplin"
     networks:
       - default
