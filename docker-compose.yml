@@ -12,8 +12,8 @@
 # If Joplin Server does not need to be accessible over the internet, set the the APP_BASE_URL to your server's hostname. 
 #     For Example: http://[hostname]:22300. The base URL can include the port.
 # APP_PORT: The local port on which the Docker container will listen. 
-#	- This would typically be mapped to port to 443 (TLS) with a reverse proxy.
-#	- If Joplin Server does not need to be accessible over the internet, the port can be mapped to 22300.
+# This would typically be mapped to port to 443 (TLS) with a reverse proxy.
+# If Joplin Server does not need to be accessible over the internet, the port can be mapped to 22300.
 
 
 services:
@@ -21,8 +21,6 @@ services:
     image: postgres:16.2-alpine3.19
     volumes:
       - ${DBVOLDIR}:/var/lib/postgresql/data
-    #ports:
-    #  - "5432:5432"
     restart: unless-stopped
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -50,7 +48,6 @@ services:
       - "traefik.docker.network=MyTraefikNet"
       - "traefik.http.routers.joplincontainer.rule=Host(`${JOPLIN_FQDN}`)"
       - "traefik.http.routers.joplincontainer.entrypoints=websecure"
-      #- "traefik.http.routers.joplincontainer.entrypoints=joplin"
       - "traefik.http.routers.joplincontainer.tls=true"
       - "traefik.http.routers.joplincontainer.tls.certresolver=mytlschallenge"
       - "traefik.http.routers.joplincontainer.middlewares=security@file"
