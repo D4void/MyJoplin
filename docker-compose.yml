@@ -49,6 +49,7 @@ services:
       - POSTGRES_HOST=db
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=MyTraefikNet"
       - "traefik.http.routers.joplincontainer.rule=Host(`${JOPLIN_FQDN}`)"
       #- "traefik.http.routers.joplincontainer.entrypoints=websecure"
       - "traefik.http.routers.joplincontainer.entrypoints=joplin"
