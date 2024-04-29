@@ -42,7 +42,7 @@ services:
       - "traefik.http.routers.joplincontainer.tls.certresolver=mytlschallenge"
       - "traefik.http.routers.joplincontainer.middlewares=security@file"
       - "traefik.http.routers.joplincontainer.service=myjoplinservice"
-      - "traefik.http.services.myjoplinservice.loadbalancer.server.port=`${JOPLIN_PORT}`"
+      - "traefik.http.services.myjoplinservice.loadbalancer.server.port=${JOPLIN_PORT}"
       - "traefik.http.services.myjoplinservice.loadbalancer.server.scheme=http"
     networks:
       - default
