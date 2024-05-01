@@ -59,9 +59,8 @@ volumes:
 
 networks:
   default:
-    external:
-      name: MyTraefikNet
-
+    external: true
+    name: MyTraefikNet
   joplin:
     internal: true
     name: MyJoplinNet
