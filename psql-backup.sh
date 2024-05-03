@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $0/.env
+source $(dirname $0)/.env
 
 backupfile="${POSTGRES_DATABASE}_dump_$(date +"%Y-%m-%d_%Hh%Mm%S").dump"
 #docker exec -it MyJoplinPostgres pg_dump -U ${POSTGRES_USER} ${POSTGRES_DATABASE} | gzip -9 > ./${POSTGRES_DATABASE}_dump_$(date +"%Y-%m-%d_%Hh%Mm%S").sql.gz
