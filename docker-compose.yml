@@ -11,6 +11,7 @@ services:
     shm_size: 256M
     volumes:
       - db_data:/var/lib/postgresql/data
+      - db_backup:/backup
     restart: unless-stopped
     environment:
       - POSTGRES_DB=${POSTGRES_DATABASE}
@@ -63,6 +64,12 @@ volumes:
     driver_opts:
       type: none
       device: ${DB_VOL}
+      o: bind
+  db_backup:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${DB_BACKUP_VOL}
       o: bind
 
 networks:

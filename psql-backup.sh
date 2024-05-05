@@ -7,11 +7,11 @@ backupfile="${POSTGRES_DATABASE}_dump_$(date +"%Y-%m-%d_%Hh%Mm%S").dump"
 
 echo "Backuping Postgres ${POSTGRES_DATABASE} database"
 
-docker exec -it MyJoplinPostgres pg_dump --format=custom --compress=6 -U ${POSTGRES_USER} ${POSTGRES_DATABASE} -f /${backupfile}
+docker exec MyJoplinPostgres pg_dump --format=custom --compress=6 -U ${POSTGRES_USER} ${POSTGRES_DATABASE} -f /backup/${backupfile}
 
-echo "Copy backup from container"
+#echo "Copy backup from container"
 
-docker cp MyJoplinPostgres:/${backupfile} .
+#docker cp MyJoplinPostgres:/${backupfile} .
 
 echo "End."
 
