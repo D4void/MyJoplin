@@ -4,7 +4,7 @@
 
 source $(dirname $0)/.env
 
-if [[ ! -f "$1" ]]; then
+if [[ -f "$1" ]]; then
     echo "Restoring backup $1 into Postgres"
     docker exec MyJoplinPostgres pg_restore -U ${POSTGRES_USER} -d ${POSTGRES_DATABASE} --no-owner --single-transaction /backup/$1
 else
