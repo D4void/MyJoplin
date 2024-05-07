@@ -1,17 +1,14 @@
 #!/bin/bash
+# Script pour restaurer un dump pg_dump d'une base Postgres Joplin en container docker
+# Le dump est accesible via le volume monté sur /backup
 
 source $(dirname $0)/.env
 
-#gunzip $1
-
-#docker cp $(dirname $1)/$(basename $1 .gz) MyJoplinPostgres:/db.sql
-#docker cp $(dirname $1)/$(basename $1 .gz) MyJoplinPostgres:/db.dump
-
-#echo "Copying backup $1 into container"
-#docker cp $1 MyJoplinPostgres:/db.dump.gz
-
-echo "Restoring backup $1 into Postgres"
-
-docker exec MyJoplinPostgres pg_restore -U ${POSTGRES_USER} -d ${POSTGRES_DATABASE} --no-owner --single-transaction /backup/$1
+if [[ ! -f "$1" ]]; then
+    echo "Restoring backup $1 into Postgres"
+    docker exec MyJoplinPostgres pg_restore -U ${POSTGRES_USER} -d ${POSTGRES_DATABASE} --no-owner --single-transaction /backup/$1
+else
+    echo "$1 doesn't exist!"
+fi
 
 echo "End."

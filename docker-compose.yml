@@ -1,8 +1,8 @@
-# Docker compose file to run Joplin Server
-# along with a PostgreSQL server.
+# Docker compose file to run Joplin Server along with a PostgreSQL server.
 #
-# Create .env file before starting.
+# Create .env file before starting. (check env.sample)
 # Traefik Label are used to reach the server from Internet with https
+# Check MyTraefik project
 
 services:
   db:
