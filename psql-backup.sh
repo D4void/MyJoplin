@@ -1,6 +1,6 @@
 #!/bin/bash
-# Script pour faire un un dump compressé d'une base Postgres Joplin en container docker
-# Le dump est déposé via un volume monté sur /backup
+# Script to make a compressed dump of a Postgres Joplin database running in a Docker container
+# The dump is dropped via a volume mounted on /backup
 
 source $(dirname $0)/.env
 

@@ -25,6 +25,7 @@ services:
     container_name: "MyJoplinApp"
     depends_on:
       - db
+      - traefik
     restart: unless-stopped
     environment:
       - APP_PORT=${JOPLIN_PORT}
@@ -73,9 +74,9 @@ volumes:
       o: bind
 
 networks:
-  default:
-    external: true
-    name: MyTraefikNet
+#  default:
+#    external: true
+#    name: MyTraefikNet
   joplin:
     internal: true
     name: MyJoplinNet

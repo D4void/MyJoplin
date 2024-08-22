@@ -1,6 +1,6 @@
 #!/bin/bash
-# Script pour restaurer un dump pg_dump d'une base Postgres Joplin en container docker
-# Le dump est accesible via le volume monté sur /backup
+# Script to restore a pg_dump of a Postgres Joplin database running in a docker container
+# The dump is accessible via the volume mounted on /backup
 
 source $(dirname $0)/.env
 
