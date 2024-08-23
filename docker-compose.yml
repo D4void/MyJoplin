@@ -10,15 +10,15 @@ services:
     container_name: "MyJoplinPostgres"
     shm_size: 256M
     volumes:
-      - db_data:/var/lib/postgresql/data
-      - db_backup:/backup
+      - joplin_db_data:/var/lib/postgresql/data
+      - joplin_db_backup:/backup
     restart: unless-stopped
     environment:
       - POSTGRES_DB=${POSTGRES_DATABASE}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}     
     networks:
-      - joplin
+      - joplinnet
 
   app:
     image: joplin:2.14.20
@@ -57,26 +57,25 @@ services:
       - "traefik.http.services.myjoplinservice.loadbalancer.server.scheme=http"
     networks:
       - default
-      - joplin
+      - joplinnet
+
 
 volumes:
-  db_data:
+  joplin_db_data:
     driver: local
     driver_opts:
       type: none
       device: ${DB_VOL}
       o: bind
-  db_backup:
+  joplin_db_backup:
     driver: local
     driver_opts:
       type: none
       device: ${DB_BACKUP_VOL}
       o: bind
 
+
 networks:
-#  default:
-#    external: true
-#    name: MyTraefikNet
-  joplin:
+  joplinnet:
     internal: true
     name: MyJoplinNet
