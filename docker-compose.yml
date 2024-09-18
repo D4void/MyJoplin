@@ -26,7 +26,7 @@ services:
     image: d4void/joplin:3.0.15
     container_name: "MyJoplinApp"
     depends_on:
-      - db
+      - joplin_db
       - traefik
     restart: unless-stopped
     environment:
