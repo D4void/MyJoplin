@@ -10,6 +10,8 @@ services:
   joplin_db:
     image: postgres:16.2-alpine3.19
     container_name: "MyJoplinPostgres"
+    depends_on:
+      - traefik
     shm_size: 256M
     volumes:
       - joplin_db_data:/var/lib/postgresql/data
