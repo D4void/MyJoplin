@@ -9,8 +9,14 @@ if [[ -f "$1" ]]; then
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
+        echo "Stop Joplin App"
+        docker container stop MyJoplinApp
+
         echo "Restoring backup $1 into Postgres"
         docker exec MyJoplinPostgres pg_restore -U ${POSTGRES_USER} -d ${POSTGRES_DATABASE} --no-owner --single-transaction /backup/$1
+
+        echo "Start Joplin App"
+        docker container start MyJoplinApp
     fi
 else
     echo "$1 doesn't exist!"
