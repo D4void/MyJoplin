@@ -25,7 +25,7 @@ services:
       - joplinnet
 
   joplin_app:
-    image: d4void/joplin:3.2.13
+    image: d4void/joplin:${JOPLIN_TAG}
     container_name: "MyJoplinApp"
     depends_on:
       - joplin_db
