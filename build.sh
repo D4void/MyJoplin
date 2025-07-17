@@ -5,7 +5,7 @@ source .env
 
 # Check JOPLIN_TAG is defined
 if [ -z "${JOPLIN_TAG}" ]; then
-  echo "Error : JOPLIN_TAG variable is not definied in .env file"
+  echo "Error : JOPLIN_TAG variable is not defined in .env file"
   exit 1
 fi
 
