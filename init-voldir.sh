@@ -15,5 +15,5 @@ fi
 if [[ ! -d ${DB_BACKUP_VOL}  ]]; then
 
     mkdir -p ${DB_BACKUP_VOL}
-    chmod 777 ${DB_BACKUP_VOL}
+    chmod 750 ${DB_BACKUP_VOL}
 fi
