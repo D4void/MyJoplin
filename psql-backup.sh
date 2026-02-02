@@ -17,7 +17,7 @@ if [[ ! -f "$PLAKAR" ]]; then
 fi
 
 BACKUPDUMPFILE="${POSTGRES_DATABASE}_dump_$(date +"%Y-%m-%d_%Hh%Mm%S").dump"
-LOGFILE="${BKP_DIR}/${TEMPDIR}/$(basename "$0" .sh)-$(date '+%Y_%m_%d-%Hh%M').log"
+LOGFILE="${DB_BACKUP_VOL}/$(basename "$0" .sh)-$(date '+%Y_%m_%d-%Hh%M').log"
 
 
 ############################################################
@@ -65,7 +65,7 @@ if [[ $? -ne 0 ]]; then
     rm -f ${DB_BACKUP_VOL}/*.dump
     __error "/!\\ Error creating plakar snapshot." 1
 fi
-rm -rf ${DB_BACKUP_VOL}/*
+rm -f ${DB_BACKUP_VOL}/*
 
 echo "End of Joplin backup."
 
