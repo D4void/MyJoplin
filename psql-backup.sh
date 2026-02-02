@@ -1,7 +1,7 @@
 #!/bin/bash
-# Script to make a compressed dump of a Postgres Joplin database running in a Docker container
-# The dump is dropped via a volume mounted on /backup
-# Then a plakar snapshot of the dump is created
+# Script to create a compressed dump of the Joplin PostgreSQL database running in a Docker container
+# The dump is saved to a volume mounted at /backup
+# Then a Plakar snapshot of the dump is created
 #
 # Ref
 # https://plakar.io/
@@ -39,6 +39,7 @@ __log() {
 ############################################################
 
 set -o pipefail 1
+rm -f ${DB_BACKUP_VOL}/*
 
 __log "Stop Joplin App"
 docker container stop MyJoplinApp
@@ -46,10 +47,10 @@ if [[ $? -ne 0 ]]; then
 	__error "/!\\ Error stopping Joplin App." 1
 fi
 
-__log "Backuping Postgres ${POSTGRES_DATABASE} database"
+__log "Backing up PostgreSQL ${POSTGRES_DATABASE} database"
 docker exec MyJoplinPostgres pg_dump --format=custom --compress=6 -U ${POSTGRES_USER} ${POSTGRES_DATABASE} -f /backup/${BACKUPDUMPFILE}
 if [[ $? -ne 0 ]]; then
-	__error "/!\\ Error backing up Postgres database." 1
+	__error "/!\\ Error backing up PostgreSQL database." 1
 fi
 
 __log "Start Joplin App"
@@ -59,15 +60,15 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # Plakar snapshot of the dump
-__log "Create plakar snapshot of Postgres dump"
+__log "Creating Plakar snapshot of PostgreSQL dump"
 $PLAKAR ${OPTS:-} ${REPONAME} ${DB_BACKUP_VOL}/
 if [[ $? -ne 0 ]]; then
     rm -f ${DB_BACKUP_VOL}/*.dump
-    __error "/!\\ Error creating plakar snapshot." 1
+    __error "/!\\ Error creating Plakar snapshot." 1
 fi
 rm -f ${DB_BACKUP_VOL}/*
 
-echo "End of Joplin backup."
+echo "Joplin backup completed successfully."
 
 set +o pipefail
 exit 0
