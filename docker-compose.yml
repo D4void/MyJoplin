@@ -1,14 +1,17 @@
-# Docker compose file to run Joplin Server along with a PostgreSQL server.
+# Docker Compose file to run Joplin Server along with a PostgreSQL server.
 #
-# Create .env file before starting. (check env.sample)
-# Traefik Label are used to reach the server from Internet through https. Refer to MyTraefik project.
+# Create a .env file before starting. (check env.example)
+# Traefik labels are used to reach the server from the Internet through HTTPS. Refer to the MyTraefik project.
 #
-# I run this with a global compose : MyDockerApps which include Traefik and this Joplin compose file.
-# d4void/joplin is the official image I build myself from the release : docker build -t d4void/joplin:3.0.15 -f Dockerfile.server .
+# I run this with a global compose: MyDockerApps which includes Traefik and this Joplin compose file.
+# d4void/joplin is the official image I build myself from the release (check build.sh)
+#
+#    Copyright (C) 2026 - D4void
+#    Licensed under the MIT License. See LICENSE file in the project root for details.
 
 services:
   joplin_db:
-    image: postgres:16.2-alpine3.19
+    image: postgres:${POSTGRES_TAG}
     container_name: "MyJoplinPostgres"
     depends_on:
       - traefik
