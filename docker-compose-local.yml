@@ -1,10 +1,7 @@
-# Docker Compose file to run Joplin Server with a PostgreSQL database.
-#
-# Create a .env file before starting (see env.example for reference).
-# Traefik labels are used for HTTPS access from the Internet. Refer to the MyTraefik project.
-#
-# I run this with a global compose (MyDockerApps) which includes Traefik and this Joplin compose file.
-# d4void/joplin is a custom image built from the official Joplin release (see build.sh).
+# Docker Compose file to run Joplin Server along with a PostgreSQL server.
+# Local dev test environment without traefik.
+# Use .env.local for configuration.
+# docker compose -f docker-compose-local.yml --env-file .env.local up -d
 #
 #    Copyright (C) 2026 - D4void
 #    Licensed under the MIT License. See LICENSE file in the project root for details.
@@ -13,8 +10,6 @@ services:
   joplin_db:
     image: postgres:${POSTGRES_TAG}
     container_name: "MyJoplinPostgres"
-    depends_on:
-      - traefik
     shm_size: 256M
     volumes:
       - joplin_db_data:/var/lib/postgresql/data
@@ -30,9 +25,10 @@ services:
   joplin_app:
     image: d4void/joplin:${JOPLIN_TAG}
     container_name: "MyJoplinApp"
+    ports:
+      - "${JOPLIN_PORT}:${JOPLIN_PORT}"
     depends_on:
       - joplin_db
-      - traefik
     restart: unless-stopped
     environment:
       - APP_PORT=${JOPLIN_PORT}
@@ -51,17 +47,6 @@ services:
       - MAILER_AUTH_PASSWORD=${MAILER_AUTH_PASSWORD}
       - MAILER_NOREPLY_NAME=${MAILER_NOREPLY_NAME}
       - MAILER_NOREPLY_EMAIL=${MAILER_NOREPLY_EMAIL}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=MyTraefikNet"
-      - "traefik.http.routers.joplincontainer.rule=Host(`${JOPLIN_FQDN}`)"
-      - "traefik.http.routers.joplincontainer.entrypoints=websecure"
-      - "traefik.http.routers.joplincontainer.tls=true"
-      - "traefik.http.routers.joplincontainer.tls.certresolver=mytlschallenge"
-      - "traefik.http.routers.joplincontainer.middlewares=security@file"
-      - "traefik.http.routers.joplincontainer.service=myjoplinservice"
-      - "traefik.http.services.myjoplinservice.loadbalancer.server.port=${JOPLIN_PORT}"
-      - "traefik.http.services.myjoplinservice.loadbalancer.server.scheme=http"
     networks:
       - default
       - joplinnet
